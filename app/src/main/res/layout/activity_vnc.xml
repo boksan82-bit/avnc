@@ -19,23 +19,10 @@
             type="com.gaurav.avnc.viewmodel.VncViewModel" />
     </data>
 
-    <!--
-    There are three components of this screen:
-
-    1. FrameView :- Renders remote content. This is "behind" all other Views.
-
-    2. Drawers   :- These represent the toolbars and are rendered on top of FrameView.
-                    Currently, we only have one drawer.
-
-    3. Status    :- Topmost View. Shows progress indicator, status msg etc. It is initially
-                    visible but becomes invisible once we are successfully connected to server.
-    -->
-
     <FrameLayout
         android:id="@+id/viewer_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
 
         <androidx.drawerlayout.widget.DrawerLayout
             android:id="@+id/drawer_layout"
@@ -48,13 +35,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <!--FrameView-->
                 <com.gaurav.avnc.ui.vnc.FrameView
                     android:id="@+id/frame_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="gone"
-                    android:background="@drawable/bg_frame_view" /> <!--Workaround for hole punching issues-->
+                    android:background="@drawable/bg_frame_view" />
 
                 <com.gaurav.avnc.ui.vnc.input.InputView
                     android:id="@+id/input_view"
@@ -78,7 +64,6 @@
                     android:visibility="gone"
                     app:backgroundAlpha="@{.5}" />
 
-                <!--Virtual keys-->
                 <ViewStub
                     android:id="@+id/virtual_keys_stub"
                     android:layout_width="wrap_content"
@@ -88,9 +73,6 @@
 
             </FrameLayout>
 
-            <!--A View containing helpful tips will be dynamically inserted here for new users -->
-
-            <!--Drawer-->
             <include
                 android:id="@+id/toolbar"
                 layout="@layout/toolbar_drawer"
@@ -98,7 +80,6 @@
 
         </androidx.drawerlayout.widget.DrawerLayout>
 
-        <!--Status-->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/status_container"
             android:layout_width="match_parent"
@@ -148,7 +129,7 @@
                 android:gravity="center"
                 android:text='@{ "( " + viewModel.disconnectReason + " )"}'
                 android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                app:isVisible="@{viewModel.state == State.Disconnected &amp;&amp; !viewModel.disconnectReason.empty}"
+                app:isVisible="@{viewModel.state == State.Disconnected && !viewModel.disconnectReason.empty}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/client_state"
@@ -174,13 +155,52 @@
                 app:indicatorColor="?colorSecondary"
                 app:indicatorInset="0dp"
                 app:indicatorSize="@dimen/action_btn_size"
-                app:isVisible="@{viewModel.state == State.Disconnected &amp;&amp; (viewModel.pref.server.autoReconnect || viewModel.profile.enableWol)}"
+                app:isVisible="@{viewModel.state == State.Disconnected && (viewModel.pref.server.autoReconnect || viewModel.profile.enableWol)}"
                 app:layout_constraintStart_toStartOf="@id/reconnect_btn"
                 app:layout_constraintTop_toTopOf="@id/reconnect_btn"
                 app:trackThickness="1dp"
                 tools:progress="50" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:id="@+id/voice_input_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="?colorSurface"
+            android:elevation="8dp"
+            android:gravity="bottom"
+            android:orientation="horizontal"
+            android:padding="@dimen/margin_normal"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/voice_buffer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_round_rect"
+                android:gravity="top|start"
+                android:hint="@string/hint_send_text_to_server"
+                android:imeOptions="actionSend|flagNoExtractUi|flagNoFullscreen"
+                android:importantForAutofill="no"
+                android:inputType="textMultiLine|textCapSentences"
+                android:maxLines="4"
+                android:minLines="2"
+                android:padding="@dimen/padding_small"
+                android:textColor="?colorOnSurface"
+                android:textColorHint="?android:textColorHint" />
+
+            <ImageButton
+                android:id="@+id/voice_send_btn"
+                android:layout_width="@dimen/action_btn_size"
+                android:layout_height="@dimen/action_btn_size"
+                android:layout_marginStart="@dimen/margin_normal"
+                android:background="@drawable/bg_circular_button"
+                android:contentDescription="@string/desc_send_text_btn"
+                android:src="@drawable/ic_send" />
+        </LinearLayout>
 
     </FrameLayout>
 </layout>
