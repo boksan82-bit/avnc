@@ -58,6 +58,8 @@ class InputHandler {
         return handled
     }
 
+    fun sendText(text: String): Boolean = keyHandler?.sendText(text) == true
+
     fun onTouchEvent(event: MotionEvent): Boolean {
         return touchHandler?.onTouchEvent(event) == true
     }
